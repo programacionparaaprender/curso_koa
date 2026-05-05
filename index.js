@@ -1,9 +1,10 @@
+import 'dotenv/config';
 import Koa from 'koa';
 import Router from '@koa/router';
 import { koaSwagger } from 'koa2-swagger-ui';
 import swaggerJsdoc from 'swagger-jsdoc';
-import { setFinalResponseMdw, setResponseTimeMdw } from './middlewares.js';
-
+import { bodyParserMdw, setFinalResponseMdw, setResponseTimeMdw } from './middlewares.js'; // Corrected import path and named import
+import { UserRepository } from './database/userRepository.js';
 // logger
 const app = new Koa();
 const router = new Router();
@@ -30,7 +31,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(setFinalResponseMdw);
 app.use(setResponseTimeMdw);
-
+app.use(bodyParserMdw());
 // Servir la UI de Swagger en /docs
 app.use(
     koaSwagger({
@@ -44,6 +45,39 @@ app.use(
 app.use(router.routes())
     .use(router.allowedMethods());
 
+
+/**
+ * @openapi
+ * /user/{id}:
+ *   get:
+ *     description: Obtiene un usuario por su ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario a buscar
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *       404:
+ *         description: Usuario no encontrado
+ */
+router.get('/user/:id', async (ctx) => {
+    const { id } = ctx.params;
+    const user = await UserRepository.getUserById(id);
+
+    if (!user) {
+        ctx.status = 404;
+        ctx.body = { ok: false, message: 'Usuario no encontrado' };
+        return;
+    }
+
+    ctx.body = user;
+});
+
+
 /**
  * @openapi
  * /user:
@@ -54,7 +88,15 @@ app.use(router.routes())
  *         description: Retorna un string "Hello, World!"
  */
 router.get('/user', async (ctx) => {
-    ctx.body = 'Hello, World!';
+    const user = await UserRepository.getUsers();
+
+    if (!user) {
+        ctx.status = 404;
+        ctx.body = { ok: false, message: 'Usuario no encontrado' };
+        return;
+    }
+
+    ctx.body = user;
 });
 
 /**
@@ -67,7 +109,14 @@ router.get('/user', async (ctx) => {
  *         description: Usuario creado exitosamente
  */
 router.post('/user', async (ctx) => {
-    ctx.body = 'Hello, World!';
+    console.log(ctx.request.body);
+    const { name, email, password } = ctx.request.body;
+    const userSaved = await UserRepository.createUser(name, email, password);
+    ctx.body = {
+        ok: true,
+        message: 'usuario creado',
+        userSaved
+    }
 });
 
 /**
@@ -79,8 +128,21 @@ router.post('/user', async (ctx) => {
  *       200:
  *         description: Usuario actualizado exitosamente
  */
-router.put('/user', async (ctx) => {
-    ctx.body = 'Hello, World!';
+router.put('/user:id', async (ctx) => {
+    const { id } = ctx.params;
+    const { name, email, password } = ctx.request.body;
+    const userUpdated = {
+        id:id,
+        name:name,
+        email:email,
+        password:password
+    }
+    await UserRepository.updateUser(id, name, email, password);
+    ctx.body = {
+        ok: true,
+        message: 'usuario actualizado',
+        userUpdated
+    }
 });
 
 /**

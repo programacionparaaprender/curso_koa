@@ -27,6 +27,9 @@
 ### 9. Crear instancia de BD en la nube
 
 ### 10. Crear conexión BD en nuestro proyecto 
+>- https://gist.github.com/chrisdev3001/aa0d854dbb143ec5a0a66d6b67f0153f
+>- https://gist.github.com/chrisdev3001/b44540e63176bfc0914260419b382420
+
 
 ## Sección 4: CRUD de usuarios
 
