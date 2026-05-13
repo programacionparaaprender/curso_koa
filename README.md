@@ -48,6 +48,7 @@
 ### 16. Encriptar password al guardar usuario
 
 ### 17. Repaso Tokens JWT
+>- npm i jsonwebtoken
 
 ### 18. Login de usuario
 

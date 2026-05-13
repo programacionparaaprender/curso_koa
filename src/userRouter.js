@@ -2,6 +2,7 @@
 
 import Router from '@koa/router';
 import { UserController } from './userController.js';
+import { LoginController } from './loginController.js';
 const router = new Router();
 
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -34,6 +35,9 @@ export const koaswagger = koaSwagger({
         spec: swaggerSpec,
     },
 });
+
+
+router.post('/login', LoginController.signIn);
 
 /**
  * @openapi

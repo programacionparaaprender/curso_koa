@@ -1,5 +1,5 @@
 import { UserRepository } from '../database/UserRepository.js';
-
+import { hashPassword } from '../database/hashPassword.js';
 const getUsers  = async (ctx) => {
   const user = await UserRepository.getUsers();
   
@@ -25,10 +25,25 @@ const getUserById = async (ctx) => {
       ctx.body = user;
 }
 
+
+const getUserByEmail = async (ctx) => {
+  const { email } = ctx.params;
+      const user = await UserRepository.getUserByEmail(email);
+  
+      if (!user) {
+          ctx.status = 404;
+          ctx.body = { ok: false, message: 'Usuario no encontrado' };
+          return;
+      }
+  
+      ctx.body = user;
+}
+
 const createUser = async (ctx) => {
   console.log(ctx.request.body);
       const { name, email, password } = ctx.request.body;
-      const userSaved = await UserRepository.createUser(name, email, password);
+      const hashedPassword = await hashPassword(password);
+      const userSaved = await UserRepository.createUser(name, email, hashedPassword);
       ctx.body = {
           ok: true,
           message: 'usuario creado',
@@ -46,13 +61,14 @@ const updateUser = async (ctx) =>{
           return;
       }
       const { name, email, password } = ctx.request.body;
+      const hashedPassword = await hashPassword(password);
       const userUpdated = {
           id:id,
           name:name,
           email:email,
-          password:password
+          password:hashedPassword
       }
-      await UserRepository.updateUser(id, name, email, password);
+      await UserRepository.updateUser(id, name, email, hashedPassword);
       ctx.body = {
           ok: true,
           message: 'usuario actualizado',
@@ -80,6 +96,7 @@ const deleteUser = async (ctx) => {
 export const UserController = {
   getUsers,
   getUserById,
+  getUserByEmail,
   createUser,
   updateUser,
   deleteUser

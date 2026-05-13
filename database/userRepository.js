@@ -1,5 +1,5 @@
 import { executeQuery } from './db.js'
-
+import {hashPassword} from './hashPassword.js'
 async function getUsers () {
   const query = 'SELECT * FROM users'
   const res = await executeQuery(query)
@@ -9,6 +9,21 @@ async function getUsers () {
 async function getUserById (id) {
   const query = 'SELECT * FROM users WHERE id = $1'
   const params = [id]
+  const res = await executeQuery(query, params)
+  return res[0]
+}
+
+async function getUserByEmailAndPassword (email, password) {
+  const query = 'SELECT * FROM users WHERE email = $1 and password = $2'
+  const passwordHash = await hashPassword(password);
+  const params = [email, passwordHash];
+  const res = await executeQuery(query, params);
+  return res[0];
+}
+
+async function getUserByEmail (email) {
+  const query = 'SELECT * FROM users WHERE email = $1'
+  const params = [email]
   const res = await executeQuery(query, params)
   return res[0]
 }
@@ -41,6 +56,8 @@ async function deleteUser (id) {
 export const UserRepository = {
   getUsers,
   getUserById,
+  getUserByEmail,
+  getUserByEmailAndPassword,
   createUser,
   updateUser,
   deleteUser
