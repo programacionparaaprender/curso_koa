@@ -61,5 +61,6 @@
 ## Sección 6: Subir nuestro proyecto a la nube
 
 ### 21. Validar request y controlar errores
+>- https://gist.github.com/chrisdev3001/54a0cf7ae60bfea008ed8d2e719b2c2b
 
 ### 22. Hacer deploy en la nube con Railway
