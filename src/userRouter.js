@@ -1,4 +1,4 @@
-
+import { validateTokenMiddleware } from '../utils/validateTokenMiddleware.js';
 
 import Router from '@koa/router';
 import { UserController } from './userController.js';
@@ -57,7 +57,7 @@ router.post('/login', LoginController.signIn);
  *       404:
  *         description: Usuario no encontrado
  */
-router.get('/user/:id', UserController.getUserById);
+router.get('/user/:id', validateTokenMiddleware, UserController.getUserById);
 
 
 /**
@@ -69,7 +69,7 @@ router.get('/user/:id', UserController.getUserById);
  *       200:
  *         description: Retorna un string "Hello, World!"
  */
-router.get('/user', UserController.getUsers);
+router.get('/user', validateTokenMiddleware, UserController.getUsers);
 
 /**
  * @openapi
@@ -91,7 +91,7 @@ router.post('/user', UserController.createUser);
  *       200:
  *         description: Usuario actualizado exitosamente
  */
-router.put('/user/:id', UserController.updateUser);
+router.put('/user/:id', validateTokenMiddleware, UserController.updateUser);
 
 /**
  * @openapi
@@ -102,6 +102,6 @@ router.put('/user/:id', UserController.updateUser);
  *       200:
  *         description: Usuario eliminado exitosamente
  */
-router.delete('/user/:id', UserController.deleteUser);
+router.delete('/user/:id', validateTokenMiddleware, UserController.deleteUser);
 
 export default router;

@@ -55,6 +55,8 @@
 ### 19. Agregando JWT a nuestro login
 
 ### 20. Protección de las rutas con JWT
+>- https://gist.github.com/chrisdev3001/ba14176ef0c7d5810b1776d898e1ba91
+
 
 ## Sección 6: Subir nuestro proyecto a la nube
 
