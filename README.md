@@ -64,3 +64,4 @@
 >- https://gist.github.com/chrisdev3001/54a0cf7ae60bfea008ed8d2e719b2c2b
 
 ### 22. Hacer deploy en la nube con Railway
+>- https://gist.github.com/chrisdev3001/12f2f47915f176caa103d463505a3cb4

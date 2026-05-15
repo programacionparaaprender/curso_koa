@@ -1,5 +1,5 @@
 import { validateTokenMiddleware } from '../utils/validateTokenMiddleware.js';
-
+import {validateUpdateUserMdw} from './updateUserMdw.js';
 import Router from '@koa/router';
 import { UserController } from './userController.js';
 import { LoginController } from './loginController.js';
@@ -80,7 +80,7 @@ router.get('/user', validateTokenMiddleware, UserController.getUsers);
  *       200:
  *         description: Usuario creado exitosamente
  */
-router.post('/user', UserController.createUser);
+router.post('/user', validateUpdateUserMdw, UserController.createUser);
 
 /**
  * @openapi

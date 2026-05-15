@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import Koa from 'koa';
-import { bodyParserMdw, setFinalResponseMdw, setResponseTimeMdw } from './middlewares.js'; // Corrected import path and named import
+import { errorCatcherMdw, bodyParserMdw, setFinalResponseMdw, setResponseTimeMdw } from './middlewares.js'; // Corrected import path and named import
 // logger
 const app = new Koa();
 import router from './src/userRouter.js';
 import { koaswagger } from './src/userRouter.js'; // Importar la configuración de Swagger
-
+app.use(errorCatcherMdw);
 app.use(setFinalResponseMdw);
 app.use(setResponseTimeMdw);
 app.use(bodyParserMdw());
